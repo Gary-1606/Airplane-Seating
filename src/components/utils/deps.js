@@ -1,3 +1,12 @@
+const isNumber = (value) => {
+  const newValue = ((value.toString().indexOf('%') > -1)
+      ? value.toString().slice(0, value.toString().indexOf('%')) : value);
+  if (isNonEmptyValue(newValue) && isNaN(newValue)) {
+      return false;
+  }
+  return true;
+}
+
 const isEmptyObject = (obj) => {
   return (
     obj === undefined ||
@@ -91,4 +100,5 @@ export {
   isNonEmptyArray,
   hasOwnProperty,
   isNonEmptyValue,
+  isNumber
 };

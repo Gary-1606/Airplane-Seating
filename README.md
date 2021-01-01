@@ -18,9 +18,11 @@
 3. Custom components has been built - Custom Dropdown, Error Boundary (Toast)
 4. REM concept implemented - Complete responsiveness of the website using a mixin (Refer calcRem() function in _mixins.scsss)
 5. Global Utility functions implemented for scalability - eg., setLocalStorage, getLocalStorage, isEmptyObject, deepCopy, etc., (Refer utils/deps.js)
+6. StringHelper.js implemented - A global file where all the normal texts are converted into constants. Helps in changing the content from one single file and also in language localisation
 
 ## Future Suggestions
 
 1. BEM Styling will be implemented
 2. Icons (SVG format) will be converted to fonts using icomoon, which helps in optimising performance
 3. Module based access permission will be implemented
+4. Language Localisation will be implemented making use of StringHelper.js

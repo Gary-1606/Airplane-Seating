@@ -1,0 +1,26 @@
+@import '../../../assets/styles/required';
+
+
+.submit-button {
+    padding: 10px;
+    width: 120px;
+    background-color: $color-sea-green;
+    -webkit-appearance: none;
+    border: none;
+    border-radius: 3px;
+    color: $white;
+    cursor: pointer;
+    outline: none;
+    &:hover {
+        opacity: 0.8;
+    }
+    &:focus {
+        outline: none;
+    }
+    &:disabled {
+        cursor: not-allowed;
+        &:hover {
+            opacity: 1;
+        }
+    }
+}

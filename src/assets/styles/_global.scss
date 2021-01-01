@@ -21,6 +21,7 @@ body {
 
         .router-content-container {
             width: calc(100% - 180px);
+            padding: 0 calcRem(20px);
             -webkit-transition: all 500ms ease-in-out;
             transition: all 500ms ease-in-out;
             background: linear-gradient(to bottom, #0c0c0c 0%, #191919 100%);
