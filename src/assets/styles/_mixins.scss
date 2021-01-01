@@ -1,0 +1,61 @@
+/* mixin used to scale the entire application */
+
+@import './variables';
+
+@function calcRem($size) {
+    $remSize: $size / $base-font-size;
+    @return #{$remSize}rem;
+}
+
+@mixin Padding($padding_left, $padding_right, $padding_top, $padding_bottom) {
+    padding-left: $padding_left + $unit-px;
+    padding-right: $padding_right + $unit-px;
+    padding-top: $padding_top + $unit-px;
+    padding-bottom: $padding_bottom + $unit-px;
+}
+
+@mixin Width($width) {
+    width: $width;
+}
+
+@mixin height($height) {
+    height: $height;
+}
+
+@mixin fontstyle() {
+    font-family: $font-family;
+}
+
+@mixin boxSizing($props) {
+    box-sizing: $props;
+    -moz-box-sizing: $props;
+    -webkit-box-sizing: $props;
+}
+
+@mixin normalFont() {
+    font-family: $font-family;
+    font-weight: $font-weight-normal;
+    color: $color-gray;
+}
+
+@mixin boldFont() {
+    font-family: $font-family;
+    font-weight: $font-weight-bold;
+    color: $color-gray;
+}
+
+@mixin multilineTextClamp($lineClamp) {
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    display: -webkit-box !important;
+    -webkit-line-clamp: $lineClamp;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-pack: center;
+}
+
+@mixin boxShadow($horizontal, $vertical, $blur, $optional, $color) {
+    box-shadow: $horizontal+px $vertical+px $blur+px $optional+px $color;
+    -webkit-box-shadow: $horizontal+px $vertical+px $blur+px $optional+px $color;
+    -moz-box-shadow: $horizontal+px $vertical+px $blur+px $optional+px $color;
+}

@@ -1,0 +1,42 @@
+@import "../../../assets/styles/required";
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $black;
+    padding: calcRem(10px);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+
+    .left {
+        .logo-link {
+            display: inline-block;
+            cursor: pointer;
+            .logo {
+                display: inline-block;
+                width: calcRem(45px);
+                height: calcRem(45px);
+                background-size: 100% 100%;
+            }
+        }
+    }
+
+    .right {
+        display: flex;
+        align-items: center;
+
+        &>span {
+            margin-right: calcRem(15px);
+            cursor: pointer;
+        }
+
+        svg,
+        path {
+            fill: $white;
+            stroke: $white;
+        }
+    }
+}

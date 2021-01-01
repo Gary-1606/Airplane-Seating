@@ -1,0 +1,56 @@
+// SVG animation.
+@import '../../../assets/styles/required';
+
+@keyframes svg-animation {
+    0% {
+      transform: rotateZ(0deg);
+    }
+  
+    100% {
+      transform: rotateZ(360deg)
+    }
+  }
+  .loading-gauge-svg {
+    animation: 2s linear infinite svg-animation;
+    max-width: 40px;
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    z-index: 1;
+  }
+  
+  // Circle styles.
+  .loading-circle {
+    display: block;
+    fill: transparent;
+    stroke: #e51c21;
+    stroke-linecap: round;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 280;
+    stroke-width: 10px;
+    transform-origin: 50% 50%;
+  }
+  
+  .loading-gauge-container {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    &.overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 12;
+      background: #000;
+    }
+  }
+  
+  .loading-gauge {
+    width: 200px;
+    height: 200px;
+    background-image: url('./loading-icon.gif');
+    background-size: 100% 100%;
+  }

@@ -1,0 +1,65 @@
+/* global styles go here */
+
+html,
+body {
+    height: 100%;
+    font-family: $font-family !important;
+    background: $black;
+    color: $white;
+}
+
+#root,
+.App {
+    height: 100%;
+
+    .main-container {
+        position: relative;
+        top: calcRem(72px);
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+
+        .router-content-container {
+            width: calc(100% - 180px);
+            -webkit-transition: all 500ms ease-in-out;
+            transition: all 500ms ease-in-out;
+            background: linear-gradient(to bottom, #0c0c0c 0%, #191919 100%);
+            //background: linear-gradient(to bottom, rgba(12,12,12,1) 0%, rgba(25,25,25,1) 30%, rgba(42,42,42,1) 100%);
+        }
+
+        .sidebar.collapsed {
+            &+.router-content-container {
+                width: calc(100% - 30px);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .router-content-container {
+                margin-left: 30px;
+                width: calc(100% - 30px);
+            }
+        }
+    }
+
+}
+
+.no-data {
+    padding: 20px;
+    color: $color-red;
+    text-align: center;
+}
+
+::-webkit-scrollbar-track {
+    background-color: 1f1f1f;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: 1f1f1f;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: $text--clr-1;
+}

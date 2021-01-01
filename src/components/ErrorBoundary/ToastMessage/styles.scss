@@ -1,0 +1,76 @@
+@import '../../../assets//styles/required';
+
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+#toast-message-container {
+  max-width: 65%;
+  position: fixed;
+  // bottom: 30px;
+  top: 10px;
+  text-align: center;
+  border: 1px solid;
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 5px;
+  padding: 15px;
+  @include normalFont();
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+  z-index: 12;
+  align-items: center;
+
+  .icon-close {
+    font-size: 20px;
+    margin-left: 15px;
+    margin-top: -2px;
+  }
+
+  .toast-text {
+    display: flex;
+    width: 100%;
+    font-family: $font-family !important;
+    line-height: 20px;
+    align-items: center;
+  }
+}
+
+.collapsed~#toast-message-container {
+  left: 16%;
+}
+
+#toast-message-container.hide {
+  display: none;
+}
+
+#toast-message-container.type-error {
+  border-color: $color-red;
+  background-color: #fceaea;
+  color: $color-red;
+}
+
+#toast-message-container.type-success {
+  border-color: $color-sea-green;
+  background-color: #e3f6e3;
+  color: $color-sea-green;
+}
