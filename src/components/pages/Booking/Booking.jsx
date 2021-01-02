@@ -19,8 +19,8 @@ class Booking extends React.Component {
       },
       {
         row1: [2, 26, 27, 3],
-        row2: [8, 30, , 9],
-        row3: [13, , , 14],
+        row2: [8, 30, 0, 9],
+        row3: [13, 0, 0, 14],
       },
       {
         row1: [4, 5],
@@ -29,9 +29,9 @@ class Booking extends React.Component {
       },
       {
         row1: [6, 28, 29],
-        row2: [12, , 22],
-        row3: [17, , 23],
-        row4: [18, , 24],
+        row2: [12, 0, 22],
+        row3: [17, 0, 23],
+        row4: [18, 0, 24],
       },
     ];
     this.setState({

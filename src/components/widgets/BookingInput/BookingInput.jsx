@@ -29,9 +29,10 @@ class BookingInput extends React.Component {
       },
     ],
     selectedSegment: null,
-    segmentCount: 0,
+    segmentCount: null,
     segmentArray: null,
     passengerCount: null,
+    showDataEntry: false,
   };
   onSegmentValChange = (event, key, list) => {
     event.preventDefault();
@@ -47,19 +48,22 @@ class BookingInput extends React.Component {
   };
   isButtonDisabled = () => {
     const { passengerCount, segmentArray } = this.state;
-    const valSegArray = segmentArray.filter((item) => {
-      return isNonEmptyArray(item);
-    });
-    if (
-      valSegArray.length < segmentArray.length ||
-      passengerCount === undefined ||
-      passengerCount === null || passengerCount < 0
-    ) {
-      return true;
+    if (segmentArray && segmentArray.length) {
+      const valSegArray = segmentArray?.filter((item) => {
+        return isNonEmptyArray(item);
+      });
+      if (
+        valSegArray.length < segmentArray.length ||
+        passengerCount === undefined ||
+        passengerCount === null ||
+        passengerCount < 0
+      ) {
+        return true;
+      }
+      return false;
     }
-    return false;
   };
-  onPassCountBlur = (event) => {
+  onCountBlur = (event, type) => {
     const { value } = event.currentTarget;
     if (!isNumber(value) || !isNonEmptyValue(value)) {
       errorBoundary({
@@ -76,16 +80,44 @@ class BookingInput extends React.Component {
         event.target.focus();
         return;
       }
-      this.setState({
-        passengerCount: Math.floor(Number(value)),
-      });
+      switch (type.toLowerCase()) {
+        case "passenger":
+          this.setState({
+            passengerCount: Math.floor(Number(value)),
+          });
+          break;
+        case "segment":
+          this.setState({
+            segmentCount: Math.floor(Number(value)),
+            showDataEntry: true,
+            segmentArray: Array(Math.floor(Number(value))).fill([]),
+          });
+          if(Math.floor(Number(value)) > 0) {
+              this.isButtonDisabled();
+          }
+          break;
+        default:
+          break;
+      }
     }
   };
-  onPassCountChange = (e) => {
-    const { value } = e.currentTarget;
-    this.setState({
-      passengerCount: Math.floor(Number(value)),
-    });
+  onCountChange = (event, type) => {
+    const { value } = event.currentTarget;
+    switch (type.toLowerCase()) {
+      case "passenger":
+        this.setState({
+          passengerCount: Math.floor(Number(value)),
+        });
+        break;
+      case "segment":
+        this.setState({
+          segmentCount: Math.floor(Number(value)),
+          segmentArray: Array(Math.floor(Number(value))).fill([]),
+        });
+        break;
+      default:
+        break;
+    }
   };
   onInputBlur = (event, index, type) => {
     const { value } = event.currentTarget;
@@ -126,16 +158,32 @@ class BookingInput extends React.Component {
     }
   };
   onButtonClick = () => {
-      const {passengerCount, segmentArray} = this.state;
-        const { updateData } = this.props;
-        if(updateData) {
-            updateData(segmentArray, passengerCount);
-        }
-  }
+    const { passengerCount, segmentArray } = this.state;
+    let totalSeatingCapacity = 0;
+    debugger;
+    segmentArray.forEach((item) => {
+      totalSeatingCapacity = totalSeatingCapacity + item[0] * item[1];
+    });
+    if (passengerCount > totalSeatingCapacity) {
+      errorBoundary({
+        message:
+          "Passenger count is greater than the total available seats. Please change the value",
+        isError: true,
+      });
+    } else {
+      const { updateData } = this.props;
+      if (updateData) {
+        updateData(segmentArray, passengerCount);
+      }
+    }
+  };
   renderSectionInput = (count) => {
     return [...Array(count)].map((item, index) => {
       return (
-        <div className="section-input d-flex align-items-center mb-3" key={index}>
+        <div
+          className="section-input d-flex align-items-center mb-3"
+          key={index}
+        >
           <div className="mr-3">{`Segment ${index + 1}`}</div>
           <input
             type="number"
@@ -154,26 +202,28 @@ class BookingInput extends React.Component {
     });
   };
   render() {
-    const {
-      selectedSegment,
-      segments,
-      segmentCount,
-      segmentArray,
-      passengerCount,
-    } = this.state;
+    const { segmentCount, showDataEntry, passengerCount } = this.state;
     return (
       <div className="booking-input-container">
         <div className="d-flex align-items-center">
-          <div className="input-text">{constant.NO_OF_SEGMENTS}</div>
-          <CustomDropdown
+          <div className="input-text mr-3">{constant.NO_OF_SEGMENTS}</div>
+          {/* <CustomDropdown
             options={segments}
             className={"custom-dropdown"}
             placeholder="No. of sections"
             selectedValue={selectedSegment}
             onChange={this.onSegmentValChange}
+          /> */}
+          <input
+            type="number"
+            className="input-container"
+            placeholder="No. of segments"
+            value={segmentCount}
+            onChange={(e) => this.onCountChange(e, "segment")}
+            onBlur={(e) => this.onCountBlur(e, "segment")}
           />
         </div>
-        {segmentCount ? (
+        {segmentCount && showDataEntry ? (
           <React.Fragment>
             <div className="my-5">
               <p className="normal-text">{constant.ROW_COLUMN_COUNT}</p>
@@ -186,8 +236,8 @@ class BookingInput extends React.Component {
                 className="input-container"
                 placeholder="No. of passengers"
                 value={passengerCount}
-                onChange={(e) => this.onPassCountChange(e)}
-                onBlur={(e) => this.onPassCountBlur(e)}
+                onChange={(e) => this.onCountChange(e, "passenger")}
+                onBlur={(e) => this.onCountBlur(e, "passenger")}
               />
             </div>
             <Button

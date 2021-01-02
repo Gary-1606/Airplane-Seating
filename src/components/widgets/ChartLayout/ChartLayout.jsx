@@ -27,7 +27,7 @@ class ChartLayout extends React.Component {
         {Object.keys(segment).map((oneKey, i) => {
           return (
             <div
-              className="airplane-row d-flex justify-content-between mb-2"
+              className="airplane-row d-flex justify-content-around mb-2"
               key={i}
             >
               {segment[oneKey].map((position, index) => {
@@ -45,7 +45,7 @@ class ChartLayout extends React.Component {
                     className={classNames("seats", seatClassName)}
                     key={index}
                   >
-                    {position}
+                    {position === 0 ? "" : position}
                   </span>
                 );
               })}
@@ -58,10 +58,13 @@ class ChartLayout extends React.Component {
   renderLayout = () => {
     const { chartData } = this.props;
     const segmentCount = chartData.length;
-    const layoutSplitVal = 12 / segmentCount;
+    let layoutSplitVal = 12;
+    if(segmentCount < 5) {
+        layoutSplitVal = 12 / segmentCount;
+    }
     return chartData.map((segment, index) => {
       return (
-        <div className={`col-${layoutSplitVal}`} key={index}>
+        <div className={classNames("mb-4",`col-${layoutSplitVal}`)} key={index}>
           <div className="bg-grey section-wrapper">
             <h4 className="text-center">{`Class ${index + 1}`}</h4>
             {this.renderSectionLayout(segment, index, segmentCount)}
