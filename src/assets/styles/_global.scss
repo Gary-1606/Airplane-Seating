@@ -14,7 +14,6 @@ body {
 
     .main-container {
         position: relative;
-        top: calcRem(72px);
         display: flex;
         flex-direction: row;
         flex-grow: 1;
@@ -24,7 +23,7 @@ body {
             padding: 0 calcRem(20px);
             -webkit-transition: all 500ms ease-in-out;
             transition: all 500ms ease-in-out;
-            background: linear-gradient(to bottom, #0c0c0c 0%, #191919 100%);
+            background: $black;
             //background: linear-gradient(to bottom, rgba(12,12,12,1) 0%, rgba(25,25,25,1) 30%, rgba(42,42,42,1) 100%);
         }
 
@@ -48,6 +47,19 @@ body {
     padding: 20px;
     color: $color-red;
     text-align: center;
+}
+
+input {
+    outline: none;
+    background: transparent;
+    border: 1px solid #4e4e4e;
+    color: $white;
+    border-radius: 3px;
+    padding: 4px;
+
+    &::placeholder {
+        color: $text--clr-1;
+    }
 }
 
 ::-webkit-scrollbar-track {

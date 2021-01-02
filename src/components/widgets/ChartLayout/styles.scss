@@ -1,0 +1,48 @@
+@import '../../../assets/styles/required';
+
+.chart-layout-container {
+    .tile {
+        width: 15px;
+        height: 15px;
+
+        &.color-green {
+            background: $color-sea-green
+        }
+
+        &.color-blue {
+            background: $color-blue;
+        }
+
+        &.color-yellow {
+            background: $color-yellow;
+        }
+    }
+
+    .section-wrapper {
+        background: #f3e8e8;
+        border-radius: 5px;
+        padding: 10px 5px 1px 5px;
+
+        h4 {
+            color: $black;
+        }
+    }
+
+    .airplane-row {
+        .seats {
+            padding: calcRem(20px);
+            background: $color-sea-green;
+            width: calcRem(60px);
+            text-align: center;
+            border-radius: 3px;
+
+            &.window {
+                background: $color-yellow;
+            }
+
+            &.middle {
+                background: $color-blue;
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+@import '../../../assets/styles/required';
+
+.booking-input-container {
+    p.normal-text {
+        font-weight: 600;
+        font-size: calcRem(16px);
+    }
+    .section-input {
+        input {
+            outline: none;
+        }
+    }
+}

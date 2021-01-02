@@ -125,11 +125,18 @@ class BookingInput extends React.Component {
       });
     }
   };
+  onButtonClick = () => {
+      const {passengerCount, segmentArray} = this.state;
+        const { updateData } = this.props;
+        if(updateData) {
+            updateData(segmentArray, passengerCount);
+        }
+  }
   renderSectionInput = (count) => {
     return [...Array(count)].map((item, index) => {
       return (
-        <div className="section-input d-flex align-items-center" key={index}>
-          <div className="mr-3">{`Section ${index + 1}`}</div>
+        <div className="section-input d-flex align-items-center mb-3" key={index}>
+          <div className="mr-3">{`Segment ${index + 1}`}</div>
           <input
             type="number"
             className="input-container mr-3"
