@@ -2,6 +2,7 @@ import React from "react";
 import classNames from "classnames";
 import { objectCompare } from "../../utils/deps";
 import "./styles.scss";
+import { isArray } from "lodash";
 
 class ChartLayout extends React.Component {
   divToFocus = React.createRef();
@@ -30,7 +31,7 @@ class ChartLayout extends React.Component {
               className="airplane-row d-flex justify-content-around mb-2"
               key={i}
             >
-              {segment[oneKey].map((position, index) => {
+              {isArray(segment[oneKey]) && segment[oneKey].map((position, index) => {
                 const seatClassName =
                   (segmentIndex === 0 && index === 0) ||
                   (segmentIndex === segmentCount - 1 &&

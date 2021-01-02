@@ -1,12 +1,9 @@
 import React from "react";
-
-import { CustomDropdown } from "../../molecules";
 import { Button } from "../../atoms";
 import {
-  isEmptyObject,
   isNumber,
   isNonEmptyValue,
-  isNonEmptyArray,
+  deepCopy
 } from "../../utils/deps";
 import { constant } from "../../utils/stringHelper";
 import { errorBoundary } from "../../ErrorBoundary";
@@ -30,30 +27,18 @@ class BookingInput extends React.Component {
     ],
     selectedSegment: null,
     segmentCount: null,
-    segmentArray: null,
+    flightSegments: null,
     passengerCount: null,
     showDataEntry: false,
   };
-  onSegmentValChange = (event, key, list) => {
-    event.preventDefault();
-    if (!isEmptyObject(list)) {
-      const { id = 1, name = "2 segments" } = list;
-      const count = name === "2 segments" ? 2 : name === "3 segments" ? 3 : 4;
-      this.setState({
-        selectedSegment: id,
-        segmentCount: count,
-        segmentArray: Array(count).fill([]),
-      });
-    }
-  };
   isButtonDisabled = () => {
-    const { passengerCount, segmentArray } = this.state;
-    if (segmentArray && segmentArray.length) {
-      const valSegArray = segmentArray?.filter((item) => {
-        return isNonEmptyArray(item);
+    const { passengerCount, flightSegments } = this.state;
+    if (flightSegments && flightSegments.length) {
+      const validFlightSegments = flightSegments?.filter((item) => {
+        return item.noOfRows && item.noOfColumns;
       });
       if (
-        valSegArray.length < segmentArray.length ||
+        validFlightSegments.length < flightSegments.length ||
         passengerCount === undefined ||
         passengerCount === null ||
         passengerCount < 0
@@ -90,10 +75,10 @@ class BookingInput extends React.Component {
           this.setState({
             segmentCount: Math.floor(Number(value)),
             showDataEntry: true,
-            segmentArray: Array(Math.floor(Number(value))).fill([]),
+            flightSegments: Array(Math.floor(Number(value))).fill({}),
           });
-          if(Math.floor(Number(value)) > 0) {
-              this.isButtonDisabled();
+          if (Math.floor(Number(value)) > 0) {
+            this.isButtonDisabled();
           }
           break;
         default:
@@ -112,11 +97,15 @@ class BookingInput extends React.Component {
       case "segment":
         this.setState({
           segmentCount: Math.floor(Number(value)),
-          segmentArray: Array(Math.floor(Number(value))).fill([]),
+          flightSegments: Array(Math.floor(Number(value))).fill({}),
         });
         break;
       default:
         break;
+    }
+    const {hideChartLayout} = this.props;
+    if(hideChartLayout) {
+        hideChartLayout();
     }
   };
   onInputBlur = (event, index, type) => {
@@ -136,33 +125,29 @@ class BookingInput extends React.Component {
         event.target.focus();
         return;
       }
-      const { segmentArray } = this.state;
-      let arrToChange = Array.from(segmentArray[index]);
+      const { flightSegments } = this.state;
+      let newFlightSegments = deepCopy(flightSegments);
       switch (type) {
         case "row":
-          arrToChange[1] = arrToChange[1] ? arrToChange[1] : 1;
-          arrToChange[0] = Math.floor(Number(value));
-          segmentArray[index] = arrToChange;
+          newFlightSegments[index].noOfRows = Math.floor(Number(value));
           break;
         case "column":
-          arrToChange[0] = arrToChange[0] ? arrToChange[0] : 1;
-          arrToChange[1] = Math.floor(Number(value));
-          segmentArray[index] = arrToChange;
+          
+          newFlightSegments[index].noOfColumns = Math.floor(Number(value));
           break;
         default:
           break;
       }
       this.setState({
-        segmentArray: segmentArray,
+        flightSegments: newFlightSegments,
       });
     }
   };
   onButtonClick = () => {
-    const { passengerCount, segmentArray } = this.state;
+    const { passengerCount, flightSegments } = this.state;
     let totalSeatingCapacity = 0;
-    debugger;
-    segmentArray.forEach((item) => {
-      totalSeatingCapacity = totalSeatingCapacity + item[0] * item[1];
+    flightSegments.forEach((item) => {
+      totalSeatingCapacity = totalSeatingCapacity + item.noofRows * item.noOfColumns;
     });
     if (passengerCount > totalSeatingCapacity) {
       errorBoundary({
@@ -173,7 +158,7 @@ class BookingInput extends React.Component {
     } else {
       const { updateData } = this.props;
       if (updateData) {
-        updateData(segmentArray, passengerCount);
+        updateData(flightSegments, passengerCount);
       }
     }
   };
@@ -207,13 +192,6 @@ class BookingInput extends React.Component {
       <div className="booking-input-container">
         <div className="d-flex align-items-center">
           <div className="input-text mr-3">{constant.NO_OF_SEGMENTS}</div>
-          {/* <CustomDropdown
-            options={segments}
-            className={"custom-dropdown"}
-            placeholder="No. of sections"
-            selectedValue={selectedSegment}
-            onChange={this.onSegmentValChange}
-          /> */}
           <input
             type="number"
             className="input-container"

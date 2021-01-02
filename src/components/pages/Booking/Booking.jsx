@@ -9,47 +9,178 @@ class Booking extends React.Component {
   state = {
     chartData: null,
     showChartLayout: false,
-    segmentArray: null,
+    flightSegments: null,
+    maxNoOfRows: 0,
   };
-  updateData = (segmentArray, passengerCount) => {
-    const segments = [
-      {
-        row1: [19, 25, 1],
-        row2: [21, 29, 7],
-      },
-      {
-        row1: [2, 26, 27, 3],
-        row2: [8, 30, 0, 9],
-        row3: [13, 0, 0, 14],
-      },
-      {
-        row1: [4, 5],
-        row2: [10, 11],
-        row3: [15, 16],
-      },
-      {
-        row1: [6, 28, 29],
-        row2: [12, 0, 22],
-        row3: [17, 0, 23],
-        row4: [18, 0, 24],
-      },
-    ];
+  bookTickets = (ticketCount, flightSegments) => {
+    for (let i = 1; i <= ticketCount; i++) {
+      let ticketBooked = this.bookAisleSeat(i, flightSegments);
+      if (!ticketBooked) {
+        ticketBooked = this.bookWindowSeat(i, flightSegments);
+      }
+      if (!ticketBooked) {
+        ticketBooked = this.bookCenterSeat(i, flightSegments);
+      }
+    }
     this.setState({
-      segmentArray: segmentArray,
+      chartData: flightSegments,
       showChartLayout: true,
-      chartData: segments,
     });
   };
-
+  bookCenterSeat = (ticketNo, flightSegments) => {
+    let maxNoOfRows = 0;
+    flightSegments.forEach((item, index) => {
+      if (maxNoOfRows < item.noOfRows) {
+        this.setState({
+          maxNoOfRows: item.noOfRows,
+        });
+        maxNoOfRows = item.noOfRows;
+      }
+    });
+    for (let j = 1; j <= maxNoOfRows; j++) {
+      let rowNo = j;
+      for (let index = 0; index < flightSegments.length; index++) {
+        let segment = flightSegments[index];
+        if (segment.noOfCenterSeats === 0) {
+          continue;
+        }
+        if (segment.noOfRows < rowNo) {
+          continue;
+        }
+        for (let i = 1; i < segment[rowNo].length - 1; i++) {
+          if (segment[rowNo][i] === 0) {
+            segment[rowNo][i] = ticketNo;
+            segment.noOfCenterSeats = segment.noOfCenterSeats - 1;
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  };
+  bookWindowSeat = (ticketNo, flightSegments) => {
+    let maxNoOfRows = 0;
+    flightSegments.forEach((item, index) => {
+      if (maxNoOfRows < item.noOfRows) {
+        this.setState({
+          maxNoOfRows: item.noOfRows,
+        });
+        maxNoOfRows = item.noOfRows;
+      }
+    });
+    for (let j = 1; j <= maxNoOfRows; j++) {
+      let rowNo = j;
+      for (let index = 0; index < flightSegments.length; index++) {
+        let segment = flightSegments[index];
+        if (index !== 0 && index !== flightSegments.length - 1) {
+          continue;
+        }
+        if (segment.noOfWindowSeats === 0) {
+          continue;
+        }
+        if (segment.noOfRows < rowNo) {
+          continue;
+        }
+        //let seats = deepCopy(segment.rowNo);
+        if (index === 0 && segment[rowNo][0] === 0) {
+          segment[rowNo][0] = ticketNo;
+          segment.noOfWindowSeats = segment.noOfWindowSeats - 1;
+          return true;
+        } else if (
+          index === flightSegments.length - 1 &&
+          segment[rowNo][segment[rowNo].length - 1] === 0
+        ) {
+          segment[rowNo][segment[rowNo].length - 1] = ticketNo;
+          segment.noOfWindowSeats = segment.noOfWindowSeats - 1;
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  bookAisleSeat = (ticketNo, flightSegments) => {
+    let maxNoOfRows = 0;
+    flightSegments.forEach((item, index) => {
+      if (maxNoOfRows < item.noOfRows) {
+        this.setState({
+          maxNoOfRows: item.noOfRows,
+        });
+        maxNoOfRows = item.noOfRows;
+      }
+    });
+    for (let j = 1; j <= maxNoOfRows; j++) {
+      let rowNo = j;
+      for (let index = 0; index < flightSegments.length; index++) {
+        let segment = flightSegments[index];
+        if (segment.noOfAsileSeats === 0) {
+          continue;
+        }
+        if (segment.noOfRows < rowNo) {
+          continue;
+        }
+        if (index !== 0 && segment[rowNo][0] === 0) {
+          segment[rowNo][0] = ticketNo;
+          segment.noOfAsileSeats = segment.noOfAsileSeats - 1;
+          return true;
+        } else if (
+          index !== flightSegments.length - 1 &&
+          segment[rowNo][segment[rowNo].length - 1] === 0
+        ) {
+          segment[rowNo][segment[rowNo].length - 1] = ticketNo;
+          segment.noOfAsileSeats = segment.noOfAsileSeats - 1;
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  updateData = (flightSegments, passengerCount) => {
+    const newFlightSegments = Array.from(flightSegments);
+    newFlightSegments.map((segment, index) => {
+      segment.totalNoOfSeats = segment.noOfRows * segment.noOfColumns;
+      segment.noOfAsileSeats =
+        index === 0 || index === newFlightSegments.length - 1
+          ? segment.noOfRows
+          : 2 * segment.noOfRows;
+      segment.noOfWindowSeats =
+        index === 0 || index === newFlightSegments.length - 1
+          ? segment.noOfRows
+          : 0;
+      segment.noOfCenterSeats =
+        segment.totalNoOfSeats -
+        (segment.noOfAsileSeats + segment.noOfWindowSeats);
+      segment.isFirst = index === 0 ? true : false;
+      segment.isLast = index === newFlightSegments.length - 1 ? true : false;
+      for (let i = 1; i <= segment.noOfRows; i++) {
+        segment[i] = Array(segment.noOfColumns).fill(0);
+      }
+    });
+    flightSegments = [...newFlightSegments];
+    this.setState({
+      flightSegments,
+    });
+    this.bookTickets(passengerCount, flightSegments);
+  };
+  hideChartLayout = () => {
+    this.setState({
+      showChartLayout: false,
+    });
+  };
   render() {
-    const { showChartLayout, chartData, segmentArray } = this.state;
+    const { showChartLayout, chartData, flightSegments } = this.state;
     return (
       <React.Fragment>
         <h2>{constant.BOOKING}</h2>
-        <BookingInput updateData={this.updateData} />
+        <BookingInput
+          updateData={this.updateData}
+          hideChartLayout={this.hideChartLayout}
+        />
         {showChartLayout ? (
           <React.Fragment>
-            <ChartLayout chartData={chartData} segmentArray={segmentArray} />
+            <ChartLayout
+              chartData={chartData}
+              flightSegments={flightSegments}
+            />
           </React.Fragment>
         ) : null}
       </React.Fragment>
