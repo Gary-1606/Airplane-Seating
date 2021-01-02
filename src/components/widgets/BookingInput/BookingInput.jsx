@@ -147,8 +147,9 @@ class BookingInput extends React.Component {
     const { passengerCount, flightSegments } = this.state;
     let totalSeatingCapacity = 0;
     flightSegments.forEach((item) => {
-      totalSeatingCapacity = totalSeatingCapacity + item.noofRows * item.noOfColumns;
+      totalSeatingCapacity = totalSeatingCapacity + item.noOfRows * item.noOfColumns;
     });
+    debugger;
     if (passengerCount > totalSeatingCapacity) {
       errorBoundary({
         message:
