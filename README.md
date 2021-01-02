@@ -1,3 +1,7 @@
+## Note
+
+1. 2D array has been considered as per javascript i.e., Row * Column instead of Column * Row
+
 ## Steps to use the repository
 
 1. Download the repository
@@ -10,6 +14,7 @@
 2. Design Libraries - Bootstrap - To leverage the Flexbox design
 3. Design Libraries - SASS - To leverage the theming of the website
 4. Basic routing is done considering scalability in future and to showcase coding ability 
+5. Validations has been added for inputs
 
 ## Architecture - Highly Scalable
 
